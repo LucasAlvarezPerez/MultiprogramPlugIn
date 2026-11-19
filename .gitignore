@@ -1,0 +1,15 @@
+# Archivos de entorno con claves secretas (CRÍTICO)
+.env
+
+# Entornos virtuales y caché de Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
