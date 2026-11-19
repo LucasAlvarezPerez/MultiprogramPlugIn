@@ -2,11 +2,11 @@ import subprocess
 from harness import SecurityHarness
 
 class Toolkit:
-    def __init__(self, harness: SecurityHarness, allowed_paths: list[stri] | None = None):
+    def __init__(self, harness: SecurityHarness, allowed_paths: list[str] | None = None):
         self.harness = harness
         self.allowed_paths = allowed_paths
         
-    def leer_archivos(self, ruta_relativa: str) -> str: 
+    def leer_archivo(self, ruta_relativa: str) -> str: 
         """ Lee el contenido de un archivo dentro del proyecto objetivo: """
         try: 
             ruta_segura = self.harness.resolver_ruta_segura(ruta_relativa, self.allowed_paths)
@@ -36,7 +36,7 @@ class Toolkit:
                 comando, 
                 shell=True, 
                 cwd = self.harness.workspace_root, 
-                captura_output=True, 
+                capture_output=True, 
                 text=True,
                 timeout=30
             )
@@ -47,7 +47,7 @@ class Toolkit:
         
     def git_status(self) -> str: 
         """Comprueba el estado de Git en el proyecto Objetivo"""
-        return self.ejecutar_comando("git satus --short")
+        return self.ejecutar_comando("git status --short")
     
     def git_commit(self, mensaje: str) -> str:
         self.ejecutar_comando("git add . ")

@@ -36,7 +36,7 @@ class SecurityHarness:
             permitido = False
             for subruta in allowed_paths: 
                 ruta_permitida = (self.workspace_root / subruta).resolve()
-                if ruta_destino == ruta_permitida or ruta_destino.is_relvative_to(ruta_permitida):
+                if ruta_destino == ruta_permitida or ruta_destino.is_relative_to(ruta_permitida):
                     permitido = True
                     break
             if not permitido: 

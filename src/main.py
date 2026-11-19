@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 from harness import SecurityHarness
@@ -7,7 +8,7 @@ load_dotenv()
 
 def cargar_tarea() -> str: 
     """Lee el objetivo diario desde TAREA_ACTUAL.md en la raíz del proyecto"""
-    ruta_tarea = Path(__file__).parent.parent 
+    ruta_tarea = Path(__file__).parent.parent / "TAREA_ACTUAL.md"
     if not ruta_tarea.exists():
         raise FileNotFoundError("No se encontró TAREA_ACTUAL.md en la raíz")
     return ruta_tarea.read_text(encoding="utf-8")
@@ -16,17 +17,17 @@ def main():
     print("[0] Incializando motor multiagente...")
     
     harness = SecurityHarness()
-    config_dir = Path(__file__).parent.parent
+    agents_dir = Path(__file__).parent.parent / "config" / "agents"
     
     # 1. Instanciamos al orquestador y sus trabajadores
-    orquestador = Agent(config_dir, harness)
+    orquestador = Agent(agents_dir / "orquestador.yaml", harness)
     
     equipo = {
-        "backend": Agent(config_dir, harness),
-        "frontend": Agent(config_dir, harness),
-        "tester": Agent(config_dir, harness),
-        "runner": Agent(config_dir, harness),
-        "documentator": Agent(config_dir, harness)
+        "backend": Agent(agents_dir / "backend.yaml", harness),
+        "frontend": Agent(agents_dir / "frontend.yaml", harness),
+        "tester": Agent(agents_dir / "tester.yaml", harness),
+        "runner": Agent(agents_dir / "runnner.yaml", harness),
+        "documentator": Agent(agents_dir / "documentator.yaml", harness)
     }
     
     tarea_objetivo = cargar_tarea()
@@ -44,9 +45,9 @@ def main():
         try:
             decision = json.loads(decision_raw)
         except json.JSONDecodeError:
-            print("[ERROR] El orquestador no devolvió un JSON válido. Reintentnado")
+            print("[ERROR] El orquestador no devolvió un JSON válido. Reintentando")
             historial_contexto += "\n[SISTEMA] Error del formato. Responde estrictamente con JSON"
-            truno += 1; 
+            turno += 1
             continue
         
         agente_elegido = decision.get("siguiente_agente")
@@ -67,7 +68,7 @@ def main():
             # Añadimos lo que hizo el trabajador a la memoria para que el orquestador lo evalúe en el siguiente turno 
             historial_contexto += f"\n--- Reporte de {agente_elegido.upper()} --- \n{resultado_trabajador}\n "
         else:
-            historial_contexto += f"\n[SISTEMA]: El agente '{agente_elegido}' no existe. Usa {list(equipo.kyes())} o FINALIZAR"
+            historial_contexto += f"\n[SISTEMA]: El agente '{agente_elegido}' no existe. Usa {list(equipo.keys())} o FINALIZAR"
             
         turno += 1
     if  turno > max_turnos: 
