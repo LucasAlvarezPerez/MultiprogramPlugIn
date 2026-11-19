@@ -22,7 +22,11 @@ def main():
     orquestador = Agent(config_dir, harness)
     
     equipo = {
-        # [TODO - INTRODUCIR AGENTES IMPLEMENTADOS]
+        "backend": Agent(config_dir, harness),
+        "frontend": Agent(config_dir, harness),
+        "tester": Agent(config_dir, harness),
+        "runner": Agent(config_dir, harness),
+        "documentator": Agent(config_dir, harness)
     }
     
     tarea_objetivo = cargar_tarea()
